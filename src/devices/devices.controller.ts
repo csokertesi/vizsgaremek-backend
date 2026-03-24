@@ -8,16 +8,22 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody, ApiParam } from '@nestjs
 @ApiTags('devices')
 @Controller('devices')
 export class DevicesController {
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(private readonly devicesService: DevicesService) { }
 
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all devices' })
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   findAll() {
     return this.devicesService.findAll();
   }
 
-  @ApiOperation({ summary: 'Get device by ID' })
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get device by ID (admin only)' })
   @ApiParam({ name: 'id', example: '1' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.devicesService.findOne(+id);

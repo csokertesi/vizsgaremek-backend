@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Param, Query, Header } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Header, UseGuards } from '@nestjs/common';
 import { MeasurementsService } from './measurements.service';
-import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiTags, ApiOperation, ApiQuery, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('measurements')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('measurements')
 export class MeasurementsController {
   constructor(private readonly measurementsService: MeasurementsService) {}

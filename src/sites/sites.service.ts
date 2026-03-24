@@ -5,12 +5,12 @@ import { PrismaService } from '../prisma.service';
 export class SitesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.site.findMany({ include: { devices: true } });
+  findAll(includeDevices = false) {
+    return this.prisma.site.findMany({ include: { devices: includeDevices } });
   }
 
-  findOne(id: number) {
-    return this.prisma.site.findUnique({ where: { id }, include: { devices: true, evaluations: true } });
+  findOne(id: number, includeDevices = false) {
+    return this.prisma.site.findUnique({ where: { id }, include: { devices: includeDevices, evaluations: true } });
   }
 
   create(data: any) {

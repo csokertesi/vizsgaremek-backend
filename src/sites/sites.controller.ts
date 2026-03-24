@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req } from '@nestjs/common';
 import { SitesService } from './sites.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
+import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody, ApiParam } from '@nestjs/swagger';
 
 @ApiTags('sites')
@@ -9,16 +12,20 @@ export class SitesController {
   constructor(private readonly sitesService: SitesService) {}
 
   @ApiOperation({ summary: 'Get all sites' })
+  @UseGuards(OptionalJwtAuthGuard)
   @Get()
-  findAll() {
-    return this.sitesService.findAll();
+  findAll(@Req() req: any) {
+    const isAdmin = req.user?.role === 'ADMIN';
+    return this.sitesService.findAll(isAdmin);
   }
 
   @ApiOperation({ summary: 'Get a single site by ID' })
   @ApiParam({ name: 'id', example: '1' })
+  @UseGuards(OptionalJwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sitesService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() req: any) {
+    const isAdmin = req.user?.role === 'ADMIN';
+    return this.sitesService.findOne(+id, isAdmin);
   }
 
   @ApiBearerAuth()
@@ -33,7 +40,8 @@ export class SitesController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post()
   create(@Body() data: any) {
     return this.sitesService.create(data);
@@ -52,7 +60,8 @@ export class SitesController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Put(':id')
   update(@Param('id') id: string, @Body() data: any) {
     return this.sitesService.update(+id, data);
@@ -61,7 +70,8 @@ export class SitesController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a site' })
   @ApiParam({ name: 'id', example: '1' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.sitesService.remove(+id);
