@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Header } from '@nestjs/common';
 import { MeasurementsService } from './measurements.service';
 import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
 
@@ -40,5 +40,18 @@ export class MeasurementsController {
   @Post()
   create(@Body() data: any) {
     return this.measurementsService.create(data);
+  }
+
+  @ApiOperation({ summary: 'Export measurements as CSV' })
+  @ApiQuery({ name: 'siteId', required: false, description: 'Filter by site ID' })
+  @ApiQuery({ name: 'deviceId', required: false, description: 'Filter by device ID' })
+  @Get('export')
+  @Header('Content-Type', 'text/csv')
+  @Header('Content-Disposition', 'attachment; filename="measurements.csv"')
+  async exportCsv(@Query('siteId') siteId?: string, @Query('deviceId') deviceId?: string) {
+    return this.measurementsService.exportCsv(
+      deviceId ? +deviceId : undefined,
+      siteId ? +siteId : undefined,
+    );
   }
 }
