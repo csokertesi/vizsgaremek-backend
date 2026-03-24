@@ -45,13 +45,25 @@ export class MeasurementsController {
   @ApiOperation({ summary: 'Export measurements as CSV' })
   @ApiQuery({ name: 'siteId', required: false, description: 'Filter by site ID' })
   @ApiQuery({ name: 'deviceId', required: false, description: 'Filter by device ID' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Max number of rows to export' })
+  @ApiQuery({ name: 'from', required: false, description: 'Start of timespan (ISO 8601 date)' })
+  @ApiQuery({ name: 'to', required: false, description: 'End of timespan (ISO 8601 date)' })
   @Get('export')
   @Header('Content-Type', 'text/csv')
   @Header('Content-Disposition', 'attachment; filename="measurements.csv"')
-  async exportCsv(@Query('siteId') siteId?: string, @Query('deviceId') deviceId?: string) {
+  async exportCsv(
+    @Query('siteId') siteId?: string,
+    @Query('deviceId') deviceId?: string,
+    @Query('limit') limit?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
     return this.measurementsService.exportCsv(
       deviceId ? +deviceId : undefined,
       siteId ? +siteId : undefined,
+      limit ? +limit : undefined,
+      from || undefined,
+      to || undefined,
     );
   }
 }

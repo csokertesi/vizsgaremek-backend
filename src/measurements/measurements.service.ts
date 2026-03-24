@@ -24,7 +24,7 @@ export class MeasurementsService {
     return this.prisma.measurement.create({ data });
   }
 
-  async exportCsv(deviceId?: number, siteId?: number): Promise<string> {
+  async exportCsv(deviceId?: number, siteId?: number, limit?: number, from?: string, to?: string): Promise<string> {
     const whereClause: any = {};
     if (deviceId) {
       whereClause.device_id = deviceId;
@@ -32,11 +32,17 @@ export class MeasurementsService {
     if (siteId) {
       whereClause.device = { site_id: siteId };
     }
+    if (from || to) {
+      whereClause.timestamp = {};
+      if (from) whereClause.timestamp.gte = new Date(from);
+      if (to) whereClause.timestamp.lte = new Date(to);
+    }
 
     const measurements = await this.prisma.measurement.findMany({
       where: whereClause,
       orderBy: { timestamp: 'desc' },
-      include: { device: true }
+      include: { device: true },
+      ...(limit ? { take: limit } : {}),
     });
 
     if (measurements.length === 0) {
