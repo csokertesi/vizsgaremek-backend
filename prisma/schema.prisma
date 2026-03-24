@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     String @default("ADMIN")
+}
+
+model Site {
+  id             Int              @id @default(autoincrement())
+  name           String
+  lat            Float?
+  lon            Float?
+  devices        Device[]
+  evaluations    SiteEvaluation[]
+}
+
+model Device {
+  id                 Int           @id @default(autoincrement())
+  site_id            Int
+  name               String
+  status             String        @default("active") // active, inactive, maintenance
+  last_seen          DateTime?
+  wifi_ssid          String?
+  wifi_password      String?
+  computer_type      String?       // "What computer is in the device"
+  measure_interval   Int           @default(300) // seconds
+  additional_details String?       @db.Text
+  debug_info         String?       @db.Text
+  site               Site          @relation(fields: [site_id], references: [id])
+  measurements       Measurement[]
+}
+
+model Measurement {
+  id          Int      @id @default(autoincrement())
+  device_id   Int
+  timestamp   DateTime @default(now())
+  pm10        Float
+  pm4         Float
+  pm2_5       Float
+  pm1         Float
+  composition String?  @db.Text
+  temp        Float
+  humidity    Float
+  wind_speed  Float
+  wind_dir    String?
+  dewpoint    Float
+  rain        Float
+  device      Device   @relation(fields: [device_id], references: [id])
+}
+
+model SiteEvaluation {
+  id              Int      @id @default(autoincrement())
+  site_id         Int
+  generated_at    DateTime @default(now())
+  evaluation_text String   @db.Text
+  generated_by    Int?     // User ID who generated it, optional
+  site            Site     @relation(fields: [site_id], references: [id])
+}

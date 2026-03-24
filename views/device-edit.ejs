@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Device <%= device?.name %></title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    label { display: block; margin-bottom: 10px; }
+    input, textarea { width: 100%; max-width: 400px; padding: 8px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Edit Device #<%= device?.id %></h1>
+  <div>
+    <label>Name: <input type="text" name="name" value="<%= device?.name %>"></label>
+    <label>Status: <input type="text" name="status" value="<%= device?.status %>"></label>
+    <label>WiFi SSID: <input type="text" name="wifi_ssid" value="<%= device?.wifi_ssid %>"></label>
+    <label>WiFi Password: <input type="password" name="wifi_password" value="<%= device?.wifi_password %>"></label>
+    <label>Computer Type: <input type="text" name="computer_type" value="<%= device?.computer_type %>"></label>
+    <label>Measure Interval (s): <input type="number" name="measure_interval" value="<%= device?.measure_interval %>"></label>
+    <label>Additional Details: <textarea name="additional_details" rows="4"><%= device?.additional_details %></textarea></label>
+    <label>Debug Info: <textarea name="debug_info" rows="4" readonly><%= device?.debug_info %></textarea></label>
+    
+    <button type="button" onclick="submitEdit()">Save Changes</button>
+  </div>
+  
+  <script>
+    function submitEdit() {
+      const data = {
+        name: document.querySelector('[name=name]').value,
+        status: document.querySelector('[name=status]').value,
+        wifi_ssid: document.querySelector('[name=wifi_ssid]').value,
+        wifi_password: document.querySelector('[name=wifi_password]').value,
+        computer_type: document.querySelector('[name=computer_type]').value,
+        measure_interval: parseInt(document.querySelector('[name=measure_interval]').value, 10),
+        additional_details: document.querySelector('[name=additional_details]').value,
+      };
+      
+      const token = localStorage.getItem('access_token');
+      fetch('/api/devices/<%= device?.id %>', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+        },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if(res.ok) alert('Device updated successfully!');
+        else alert('Error updating device. Ensure you are logged in (token in localStorage "access_token").');
+      });
+    }
+  </script>
+</body>
+</html>
