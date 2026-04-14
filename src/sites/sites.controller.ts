@@ -19,6 +19,12 @@ export class SitesController {
     return this.sitesService.findAll(isAdmin);
   }
 
+  @ApiOperation({ summary: 'Get aggregated dashboard data' })
+  @Get('dashboard')
+  getDashboardData() {
+    return this.sitesService.getDashboardData();
+  }
+
   @ApiOperation({ summary: 'Get a single site by ID' })
   @ApiParam({ name: 'id', example: '1' })
   @UseGuards(OptionalJwtAuthGuard)
