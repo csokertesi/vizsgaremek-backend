@@ -35,7 +35,7 @@ model Device {
   measure_interval   Int           @default(300) // seconds
   additional_details String?       @db.Text
   debug_info         String?       @db.Text
-  site               Site          @relation(fields: [site_id], references: [id])
+  site               Site          @relation(fields: [site_id], references: [id], onDelete: Cascade)
   measurements       Measurement[]
 }
 
@@ -54,7 +54,7 @@ model Measurement {
   wind_dir    String?
   dewpoint    Float
   rain        Float
-  device      Device   @relation(fields: [device_id], references: [id])
+  device      Device   @relation(fields: [device_id], references: [id], onDelete: Cascade)
 }
 
 model SiteEvaluation {
@@ -63,5 +63,5 @@ model SiteEvaluation {
   generated_at    DateTime @default(now())
   evaluation_text String   @db.Text
   generated_by    Int?     // User ID who generated it, optional
-  site            Site     @relation(fields: [site_id], references: [id])
+  site            Site     @relation(fields: [site_id], references: [id], onDelete: Cascade)
 }
