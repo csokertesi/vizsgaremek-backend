@@ -48,9 +48,10 @@ export class AdminController {
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
+        username: true,
         email: true,
         role: true,
-      }
+      },
     });
     return users;
   }
@@ -63,7 +64,8 @@ export class AdminController {
   async updateUserRole(@Param('id') id: string, @Body() body: { role: string }) {
     return this.prisma.user.update({
       where: { id: parseInt(id) },
-      data: { role: body.role }
+      data: { role: body.role },
+      select: { id: true, username: true, email: true, role: true },
     });
   }
 
@@ -75,6 +77,7 @@ export class AdminController {
   async deleteUser(@Param('id') id: string) {
     return this.prisma.user.delete({
       where: { id: parseInt(id) },
+      select: { id: true, username: true, email: true, role: true },
     });
   }
 }

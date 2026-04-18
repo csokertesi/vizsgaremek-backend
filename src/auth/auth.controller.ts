@@ -8,19 +8,34 @@ import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @ApiOperation({ summary: 'Login user' })
+  @ApiOperation({
+    summary: 'Login user',
+    description:
+      'Send `identifier` (email or username) and `password`.',
+  })
   @ApiBody({
     schema: {
       type: 'object',
+      required: ['password'],
       properties: {
-        email: { type: 'string', example: 'admin@example.com' },
+        identifier: {
+          type: 'string',
+          example: 'admin@example.com',
+          description: 'User email or username',
+        },
+        email: {
+          type: 'string',
+          example: 'admin@example.com',
+          description: 'Deprecated: same as identifier when identifier is omitted',
+        },
         password: { type: 'string', example: 'admin123' },
       },
     },
   })
   @Post('login')
   async login(@Body() body) {
-    const user = await this.authService.validateUser(body.email, body.password);
+    const identifier = body.identifier ?? body.email;
+    const user = await this.authService.validateUser(identifier, body.password);
     if (!user) {
       throw new UnauthorizedException();
     }
@@ -32,6 +47,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
+        username: { type: 'string', example: 'newuser' },
         email: { type: 'string', example: 'newuser@example.com' },
         password: { type: 'string', example: 'secret123' },
         role: { type: 'string', example: 'USER' },
@@ -48,6 +64,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    const { password, ...user } = req.user;
+    return user;
   }
 }
