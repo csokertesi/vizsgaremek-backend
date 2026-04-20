@@ -1,23 +1,34 @@
-import { Controller, Get, Post, Body, Param, Query, Header, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Header, UseGuards } from '@nestjs/common';
 import { MeasurementsService } from './measurements.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiQuery, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('measurements')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('measurements')
 export class MeasurementsController {
   constructor(private readonly measurementsService: MeasurementsService) {}
 
   @ApiOperation({ summary: 'Get recent measurements' })
   @ApiQuery({ name: 'deviceId', required: false, description: 'Filter by device ID' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Query('deviceId') deviceId?: string) {
     if (deviceId) {
       return this.measurementsService.findByDevice(+deviceId);
     }
     return this.measurementsService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Submit encrypted device measurement via GET' })
+  @ApiQuery({
+    name: 'data',
+    required: true,
+    description: 'Base64url encoded encrypted payload containing IV + ciphertext',
+  })
+  @Get('device')
+  createFromDevice(@Query('data') data: string) {
+    return this.measurementsService.createFromEncryptedQueryParam(data);
   }
 
   @ApiOperation({ summary: 'Submit a new measurement' })
@@ -40,6 +51,8 @@ export class MeasurementsController {
       },
     },
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() data: any) {
     return this.measurementsService.create(data);
@@ -51,6 +64,8 @@ export class MeasurementsController {
   @ApiQuery({ name: 'limit', required: false, description: 'Max number of rows to export' })
   @ApiQuery({ name: 'from', required: false, description: 'Start of timespan (ISO 8601 date)' })
   @ApiQuery({ name: 'to', required: false, description: 'End of timespan (ISO 8601 date)' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get('export')
   @Header('Content-Type', 'text/csv')
   @Header('Content-Disposition', 'attachment; filename="measurements.csv"')
