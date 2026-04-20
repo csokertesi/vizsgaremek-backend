@@ -1,0 +1,629 @@
+{
+  "info": {
+    "_postman_id": "7c28d6d3-4a7f-4bf4-a6c9-6d5496da0c6e",
+    "name": "Vizsgaremek Backend - Database Endpoints",
+    "description": "Collection for testing all database-related endpoints in the Vizsgaremek backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "jwtToken", "value": "" },
+    { "key": "siteId", "value": "1" },
+    { "key": "deviceId", "value": "1" },
+    { "key": "userId", "value": "1" },
+    { "key": "postmanRunId", "value": "" },
+    { "key": "postmanUsername", "value": "" },
+    { "key": "postmanEmail", "value": "" },
+    { "key": "postmanSiteName", "value": "" },
+    { "key": "postmanSiteId", "value": "" },
+    { "key": "postmanDeviceName", "value": "" },
+    { "key": "postmanDeviceId", "value": "" },
+    { "key": "managedUserId", "value": "" },
+    { "key": "registeredUserToken", "value": "" },
+    { "key": "adminIdentifier", "value": "admin@example.com" },
+    { "key": "adminPassword", "value": "admin123" },
+    { "key": "encryptedData", "value": "replace-with-base64url-encrypted-payload" },
+    { "key": "fromDateIso", "value": "2026-01-01T00:00:00.000Z" },
+    { "key": "toDateIso", "value": "2026-12-31T23:59:59.999Z" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const reqName = pm.info.requestName;",
+          "let runId = pm.collectionVariables.get('postmanRunId');",
+          "if (!runId) {",
+          "  runId = String(Date.now());",
+          "  pm.collectionVariables.set('postmanRunId', runId);",
+          "}",
+          "",
+          "if (reqName === 'Register User') {",
+          "  pm.collectionVariables.set('postmanUsername', `postman_user_${runId}`);",
+          "  pm.collectionVariables.set('postmanEmail', `postman_user_${runId}@example.com`);",
+          "}",
+          "",
+          "if (reqName === 'Create Site (ADMIN)') {",
+          "  pm.collectionVariables.set('postmanSiteName', `Postman Site ${runId}`);",
+          "}",
+          "",
+          "if (reqName === 'Create Device (ADMIN)') {",
+          "  pm.collectionVariables.set('postmanDeviceName', `Postman Device ${runId}`);",
+          "}",
+          "",
+          "if (reqName === 'Update Site (ADMIN)' && !pm.collectionVariables.get('postmanSiteId')) {",
+          "  pm.collectionVariables.set('postmanSiteId', pm.collectionVariables.get('siteId'));",
+          "}",
+          "",
+          "if (reqName === 'Update Device (ADMIN)' && !pm.collectionVariables.get('postmanDeviceId')) {",
+          "  pm.collectionVariables.set('postmanDeviceId', pm.collectionVariables.get('deviceId'));",
+          "}",
+          "",
+          "if ((reqName === 'Update User Role (ADMIN)' || reqName === 'Delete User (ADMIN)') && !pm.collectionVariables.get('managedUserId')) {",
+          "  pm.collectionVariables.set('managedUserId', pm.collectionVariables.get('userId'));",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "const reqName = pm.info.requestName;",
+          "const code = pm.response.code;",
+          "const contentType = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+          "const isJson = contentType.includes('application/json');",
+          "const isCsv = contentType.includes('text/csv');",
+          "const isHtml = contentType.includes('text/html');",
+          "",
+          "const expectedCodesByRequest = {",
+          "  'Login (stores jwtToken)': [200, 201],",
+          "  'Register User': [200, 201],",
+          "  'Get Profile': [200],",
+          "  'Get All Sites': [200],",
+          "  'Get Dashboard Data': [200],",
+          "  'Get Site By ID': [200],",
+          "  'Create Site (ADMIN)': [200, 201],",
+          "  'Update Site (ADMIN)': [200],",
+          "  'Delete Site (ADMIN)': [200],",
+          "  'Get All Devices (ADMIN)': [200],",
+          "  'Get Device By ID (ADMIN)': [200],",
+          "  'Create Device (ADMIN)': [200, 201],",
+          "  'Update Device (ADMIN)': [200],",
+          "  'Delete Device (ADMIN)': [200],",
+          "  'Get Recent Measurements (JWT)': [200],",
+          "  'Get Measurements By Device (JWT)': [200],",
+          "  'Submit Encrypted Device Measurement': [200, 201, 400, 401],",
+          "  'Create Measurement (JWT)': [200, 201],",
+          "  'Export Measurements CSV (JWT)': [200],",
+          "  'Get Evaluations By Site': [200],",
+          "  'Generate Evaluation': [200, 201],",
+          "  'Get Stats (ADMIN)': [200],",
+          "  'Get Users (ADMIN)': [200],",
+          "  'Update User Role (ADMIN)': [200],",
+          "  'Delete User (ADMIN)': [200],",
+          "  'Get Device Edit Page (DB-backed view)': [200]",
+          "};",
+          "",
+          "const expected = expectedCodesByRequest[reqName] || [200, 201];",
+          "pm.test(`${reqName} returns expected status`, function () {",
+          "  pm.expect(expected).to.include(code);",
+          "});",
+          "",
+          "pm.test(`${reqName} responds within 3 seconds`, function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "if (isJson) {",
+          "  const body = pm.response.json();",
+          "  pm.test(`${reqName} has JSON response`, function () {",
+          "    pm.expect(body).to.not.equal(null);",
+          "  });",
+          "",
+          "  if (reqName === 'Login (stores jwtToken)' || reqName === 'Register User') {",
+          "    pm.test(`${reqName} returns access token`, function () {",
+          "      pm.expect(body.access_token).to.be.a('string').and.not.empty;",
+          "    });",
+          "",
+          "    if (reqName === 'Login (stores jwtToken)') {",
+          "      pm.collectionVariables.set('jwtToken', body.access_token);",
+          "    }",
+          "",
+          "    if (reqName === 'Register User') {",
+          "      pm.collectionVariables.set('registeredUserToken', body.access_token);",
+          "    }",
+          "",
+          "    if (reqName === 'Register User') {",
+          "      const token = body.access_token;",
+          "      const parts = token.split('.');",
+          "      if (parts.length === 3) {",
+          "        try {",
+          "          const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));",
+          "          if (payload.sub) {",
+          "            pm.collectionVariables.set('managedUserId', String(payload.sub));",
+          "          }",
+          "        } catch (e) {}",
+          "      }",
+          "    }",
+          "  }",
+          "",
+          "  if (reqName === 'Get All Sites' && Array.isArray(body) && body.length > 0 && body[0].id) {",
+          "    pm.collectionVariables.set('siteId', String(body[0].id));",
+          "  }",
+          "",
+          "  if (reqName === 'Create Site (ADMIN)' && body.id) {",
+          "    pm.collectionVariables.set('postmanSiteId', String(body.id));",
+          "  }",
+          "",
+          "  if (reqName === 'Get All Devices (ADMIN)' && Array.isArray(body) && body.length > 0 && body[0].id) {",
+          "    pm.collectionVariables.set('deviceId', String(body[0].id));",
+          "  }",
+          "",
+          "  if (reqName === 'Create Device (ADMIN)' && body.id) {",
+          "    pm.collectionVariables.set('postmanDeviceId', String(body.id));",
+          "  }",
+          "",
+          "  if (reqName === 'Get Users (ADMIN)' && Array.isArray(body)) {",
+          "    const chosen = body.find((u) => u && u.role !== 'ADMIN') || body[0];",
+          "    if (chosen && chosen.id) {",
+          "      pm.collectionVariables.set('managedUserId', String(chosen.id));",
+          "      pm.collectionVariables.set('userId', String(chosen.id));",
+          "    }",
+          "  }",
+          "}",
+          "",
+          "if (reqName === 'Export Measurements CSV (JWT)') {",
+          "  pm.test('CSV export response content-type is text/csv', function () {",
+          "    pm.expect(isCsv).to.eql(true);",
+          "  });",
+          "  pm.test('CSV export has header row', function () {",
+          "    const text = pm.response.text();",
+          "    pm.expect(text).to.include('id,device_id,site_id,timestamp');",
+          "  });",
+          "}",
+          "",
+          "if (reqName === 'Get Device Edit Page (DB-backed view)') {",
+          "  pm.test('Edit page returns HTML', function () {",
+          "    pm.expect(isHtml).to.eql(true);",
+          "  });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (stores jwtToken)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"{{adminIdentifier}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{postmanUsername}}\",\n  \"email\": \"{{postmanEmail}}\",\n  \"password\": \"secret123\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sites",
+      "item": [
+        {
+          "name": "Get All Sites",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/sites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites"]
+            }
+          }
+        },
+        {
+          "name": "Get Dashboard Data",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get Site By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/{{siteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites", "{{siteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Site (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{postmanSiteName}}\",\n  \"lat\": 47.123,\n  \"lon\": 19.456\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites"]
+            }
+          }
+        },
+        {
+          "name": "Update Site (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Postman Site\",\n  \"lat\": 47.223,\n  \"lon\": 19.556\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/{{postmanSiteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites", "{{postmanSiteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Site (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sites/{{postmanSiteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sites", "{{postmanSiteId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Devices",
+      "item": [
+        {
+          "name": "Get All Devices (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Get Device By ID (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{deviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{deviceId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Device (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"site_id\": {{siteId}},\n  \"name\": \"{{postmanDeviceName}}\",\n  \"status\": \"active\",\n  \"computer_type\": \"Raspberry Pi\",\n  \"measure_interval\": 300,\n  \"wifi_ssid\": \"MyWiFi\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Update Device (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Device Name\",\n  \"status\": \"inactive\",\n  \"measure_interval\": 600\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{postmanDeviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{postmanDeviceId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Device (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{postmanDeviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{postmanDeviceId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Measurements",
+      "item": [
+        {
+          "name": "Get Recent Measurements (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/measurements",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "measurements"]
+            }
+          }
+        },
+        {
+          "name": "Get Measurements By Device (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/measurements?deviceId={{deviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "measurements"],
+              "query": [
+                { "key": "deviceId", "value": "{{deviceId}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Encrypted Device Measurement",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/measurements/device?data={{encryptedData}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "measurements", "device"],
+              "query": [
+                { "key": "data", "value": "{{encryptedData}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Measurement (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"device_id\": {{deviceId}},\n  \"pm10\": 45.2,\n  \"pm4\": 28.1,\n  \"pm2_5\": 22,\n  \"pm1\": 15.5,\n  \"composition\": \"Mostly exhaust fumes\",\n  \"temp\": 18.5,\n  \"humidity\": 65,\n  \"wind_speed\": 12,\n  \"wind_dir\": \"NW\",\n  \"dewpoint\": 11,\n  \"rain\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/measurements",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "measurements"]
+            }
+          }
+        },
+        {
+          "name": "Export Measurements CSV (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/measurements/export?siteId={{siteId}}&deviceId={{deviceId}}&limit=100&from={{fromDateIso}}&to={{toDateIso}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "measurements", "export"],
+              "query": [
+                { "key": "siteId", "value": "{{siteId}}" },
+                { "key": "deviceId", "value": "{{deviceId}}" },
+                { "key": "limit", "value": "100" },
+                { "key": "from", "value": "{{fromDateIso}}" },
+                { "key": "to", "value": "{{toDateIso}}" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evaluations",
+      "item": [
+        {
+          "name": "Get Evaluations By Site",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/evaluations/site/{{siteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "evaluations", "site", "{{siteId}}"]
+            }
+          }
+        },
+        {
+          "name": "Generate Evaluation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evaluation_text\": \"A levego minosege megfelelo.\",\n  \"generated_by\": {{userId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/evaluations/generate/{{siteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "evaluations", "generate", "{{siteId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (No /api Prefix)",
+      "item": [
+        {
+          "name": "Get Stats (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Users (ADMIN)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Update User Role (ADMIN)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{managedUserId}}/role",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{managedUserId}}", "role"]
+            }
+          }
+        },
+        {
+          "name": "Delete User (ADMIN)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{jwtToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{managedUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{managedUserId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Device Edit Page (DB-backed view)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/devices/{{deviceId}}/edit",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "devices", "{{deviceId}}", "edit"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
