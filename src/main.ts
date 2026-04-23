@@ -14,10 +14,12 @@ async function bootstrap() {
     origin: [
       'http://localhost:5173',
       'https://vizsgaremek-kler.vercel.app',
-      /\.vercel\.app$/ // Ez engedélyezi az összes Vercel-es aldomain-t is
+      'https://vizsgaremek-backend.vercel.app',
+      'https://vizsgaremek-backend-git-main-simonmartin0604s-projects.vercel.app'
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true, // Ez teszi lehetővé a hitelesítést (login)
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Requested-With'],
     optionsSuccessStatus: 204,
   });
 
