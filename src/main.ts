@@ -11,9 +11,13 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: '*',
+    origin: [
+      'http://localhost:5173',
+      'https://vizsgaremek-kler.vercel.app',
+      /\.vercel\.app$/ // Ez engedélyezi az összes Vercel-es aldomain-t is
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    preflightContinue: false,
+    credentials: true, // Ez teszi lehetővé a hitelesítést (login)
     optionsSuccessStatus: 204,
   });
 
@@ -35,6 +39,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);
 
+  // Vercel-en a PORT változót a rendszer adja, lokálisan pedig 3000
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
