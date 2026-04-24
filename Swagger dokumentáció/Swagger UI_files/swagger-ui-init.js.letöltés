@@ -1,0 +1,942 @@
+
+window.onload = function() {
+  // Build a system
+  let url = window.location.search.match(/url=([^&]+)/);
+  if (url && url.length > 1) {
+    url = decodeURIComponent(url[1]);
+  } else {
+    url = window.location.origin;
+  }
+  let options = {
+  "swaggerDoc": {
+    "openapi": "3.0.0",
+    "paths": {
+      "/": {
+        "get": {
+          "operationId": "AppController_getHello",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "App"
+          ]
+        }
+      },
+      "/api/auth/login": {
+        "post": {
+          "description": "Send `identifier` (email or username) and `password`.",
+          "operationId": "AuthController_login",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "password"
+                  ],
+                  "properties": {
+                    "identifier": {
+                      "type": "string",
+                      "example": "admin@example.com",
+                      "description": "User email or username"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "admin@example.com",
+                      "description": "Deprecated: same as identifier when identifier is omitted"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "admin123"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "summary": "Login user",
+          "tags": [
+            "auth"
+          ]
+        }
+      },
+      "/api/auth/register": {
+        "post": {
+          "operationId": "AuthController_register",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "newuser"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "newuser@example.com"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "secret123"
+                    },
+                    "role": {
+                      "type": "string",
+                      "example": "USER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "summary": "Register a new user",
+          "tags": [
+            "auth"
+          ]
+        }
+      },
+      "/api/auth/profile": {
+        "get": {
+          "operationId": "AuthController_getProfile",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get current user profile",
+          "tags": [
+            "auth"
+          ]
+        }
+      },
+      "/api/sites": {
+        "get": {
+          "operationId": "SitesController_findAll",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "summary": "Get all sites",
+          "tags": [
+            "sites"
+          ]
+        },
+        "post": {
+          "operationId": "SitesController_create",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "New Site 1"
+                    },
+                    "lat": {
+                      "type": "number",
+                      "example": 47.123
+                    },
+                    "lon": {
+                      "type": "number",
+                      "example": 19.456
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Create a new site",
+          "tags": [
+            "sites"
+          ]
+        }
+      },
+      "/api/sites/dashboard": {
+        "get": {
+          "operationId": "SitesController_getDashboardData",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "summary": "Get aggregated dashboard data",
+          "tags": [
+            "sites"
+          ]
+        }
+      },
+      "/api/sites/{id}": {
+        "get": {
+          "operationId": "SitesController_findOne",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "summary": "Get a single site by ID",
+          "tags": [
+            "sites"
+          ]
+        },
+        "put": {
+          "operationId": "SitesController_update",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Updated Site 1"
+                    },
+                    "lat": {
+                      "type": "number",
+                      "example": 47.123
+                    },
+                    "lon": {
+                      "type": "number",
+                      "example": 19.456
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Update an existing site",
+          "tags": [
+            "sites"
+          ]
+        },
+        "delete": {
+          "operationId": "SitesController_remove",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Delete a site",
+          "tags": [
+            "sites"
+          ]
+        }
+      },
+      "/api/devices": {
+        "get": {
+          "operationId": "DevicesController_findAll",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get all devices",
+          "tags": [
+            "devices"
+          ]
+        },
+        "post": {
+          "operationId": "DevicesController_create",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "site_id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Device XYZ"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "active"
+                    },
+                    "computer_type": {
+                      "type": "string",
+                      "example": "Raspberry Pi"
+                    },
+                    "measure_interval": {
+                      "type": "number",
+                      "example": 300
+                    },
+                    "wifi_ssid": {
+                      "type": "string",
+                      "example": "MyWiFi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Create a new device",
+          "tags": [
+            "devices"
+          ]
+        }
+      },
+      "/api/devices/{id}": {
+        "get": {
+          "operationId": "DevicesController_findOne",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get device by ID (admin only)",
+          "tags": [
+            "devices"
+          ]
+        },
+        "put": {
+          "operationId": "DevicesController_update",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Updated Device Name"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "inactive"
+                    },
+                    "measure_interval": {
+                      "type": "number",
+                      "example": 600
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Update an existing device",
+          "tags": [
+            "devices"
+          ]
+        },
+        "delete": {
+          "operationId": "DevicesController_remove",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Delete a device",
+          "tags": [
+            "devices"
+          ]
+        }
+      },
+      "/api/measurements": {
+        "get": {
+          "operationId": "MeasurementsController_findAll",
+          "parameters": [
+            {
+              "name": "deviceId",
+              "required": false,
+              "in": "query",
+              "description": "Filter by device ID",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get recent measurements",
+          "tags": [
+            "measurements"
+          ]
+        },
+        "post": {
+          "operationId": "MeasurementsController_create",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "device_id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "pm10": {
+                      "type": "number",
+                      "example": 45.2
+                    },
+                    "pm4": {
+                      "type": "number",
+                      "example": 28.1
+                    },
+                    "pm2_5": {
+                      "type": "number",
+                      "example": 22
+                    },
+                    "pm1": {
+                      "type": "number",
+                      "example": 15.5
+                    },
+                    "composition": {
+                      "type": "string",
+                      "example": "Főként kipufogógáz."
+                    },
+                    "temp": {
+                      "type": "number",
+                      "example": 18.5
+                    },
+                    "humidity": {
+                      "type": "number",
+                      "example": 65
+                    },
+                    "wind_speed": {
+                      "type": "number",
+                      "example": 12
+                    },
+                    "wind_dir": {
+                      "type": "string",
+                      "example": "ÉNy"
+                    },
+                    "dewpoint": {
+                      "type": "number",
+                      "example": 11
+                    },
+                    "rain": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Submit a new measurement",
+          "tags": [
+            "measurements"
+          ]
+        }
+      },
+      "/api/measurements/device": {
+        "get": {
+          "operationId": "MeasurementsController_createFromDevice",
+          "parameters": [
+            {
+              "name": "data",
+              "required": true,
+              "in": "query",
+              "description": "Base64url encoded encrypted payload containing IV + ciphertext",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "summary": "Submit encrypted device measurement via GET",
+          "tags": [
+            "measurements"
+          ]
+        }
+      },
+      "/api/measurements/export": {
+        "get": {
+          "operationId": "MeasurementsController_exportCsv",
+          "parameters": [
+            {
+              "name": "siteId",
+              "required": false,
+              "in": "query",
+              "description": "Filter by site ID",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "deviceId",
+              "required": false,
+              "in": "query",
+              "description": "Filter by device ID",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "limit",
+              "required": false,
+              "in": "query",
+              "description": "Max number of rows to export",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "from",
+              "required": false,
+              "in": "query",
+              "description": "Start of timespan (ISO 8601 date)",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "to",
+              "required": false,
+              "in": "query",
+              "description": "End of timespan (ISO 8601 date)",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Export measurements as CSV",
+          "tags": [
+            "measurements"
+          ]
+        }
+      },
+      "/api/evaluations/site/{siteId}": {
+        "get": {
+          "operationId": "EvaluationsController_findBySite",
+          "parameters": [
+            {
+              "name": "siteId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "summary": "Get evaluations for a specific site",
+          "tags": [
+            "evaluations"
+          ]
+        }
+      },
+      "/api/evaluations/generate/{siteId}": {
+        "post": {
+          "operationId": "EvaluationsController_generate",
+          "parameters": [
+            {
+              "name": "siteId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "example": "1",
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "evaluation_text": {
+                      "type": "string",
+                      "example": "A levegő minősége kiváló."
+                    },
+                    "generated_by": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          },
+          "summary": "Generate a new evaluation for a site",
+          "tags": [
+            "evaluations"
+          ]
+        }
+      },
+      "/admin/devices/{id}/edit": {
+        "get": {
+          "operationId": "AdminController_editDevice",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "admin"
+          ]
+        }
+      },
+      "/admin/stats": {
+        "get": {
+          "operationId": "AdminController_getStats",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get current system stats for admin dashboard",
+          "tags": [
+            "admin"
+          ]
+        }
+      },
+      "/admin/users": {
+        "get": {
+          "operationId": "AdminController_getUsers",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Get all users",
+          "tags": [
+            "admin"
+          ]
+        }
+      },
+      "/admin/users/{id}/role": {
+        "patch": {
+          "operationId": "AdminController_updateUserRole",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Update user role",
+          "tags": [
+            "admin"
+          ]
+        }
+      },
+      "/admin/users/{id}": {
+        "delete": {
+          "operationId": "AdminController_deleteUser",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "security": [
+            {
+              "bearer": []
+            }
+          ],
+          "summary": "Delete user",
+          "tags": [
+            "admin"
+          ]
+        }
+      }
+    },
+    "info": {
+      "title": "Air Pollution API",
+      "description": "The Air Pollution Monitoring System API description",
+      "version": "1.0",
+      "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+      "securitySchemes": {
+        "bearer": {
+          "scheme": "bearer",
+          "bearerFormat": "JWT",
+          "type": "http"
+        }
+      },
+      "schemas": {}
+    }
+  },
+  "customOptions": {}
+};
+  url = options.swaggerUrl || url
+  let urls = options.swaggerUrls
+  let customOptions = options.customOptions
+  let spec1 = options.swaggerDoc
+  let swaggerOptions = {
+    spec: spec1,
+    url: url,
+    urls: urls,
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ],
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
+    layout: "StandaloneLayout"
+  }
+  for (let attrname in customOptions) {
+    swaggerOptions[attrname] = customOptions[attrname];
+  }
+  let ui = SwaggerUIBundle(swaggerOptions)
+
+  if (customOptions.initOAuth) {
+    ui.initOAuth(customOptions.initOAuth)
+  }
+
+  if (customOptions.authAction) {
+    ui.authActions.authorize(customOptions.authAction)
+  }
+  
+  window.ui = ui
+}
