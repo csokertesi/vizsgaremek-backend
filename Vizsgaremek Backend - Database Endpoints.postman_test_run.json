@@ -1,0 +1,1158 @@
+{
+	"id": "d986c1f8-7b04-4d7b-811d-a24b4348b11c",
+	"name": "Vizsgaremek Backend - Database Endpoints",
+	"timestamp": "2026-04-20T15:18:03.208Z",
+	"collection_id": "10873554-4ff3e270-90a7-4428-b851-96c09ce81677",
+	"folder_id": 0,
+	"environment_id": "10873554-4f7be6cc-f625-4e4f-a076-b3ca1f84d91b",
+	"totalPass": 81,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-04-20T15:18:00.580Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "debb0c11-4896-4652-8058-98ffb5b3fdfa",
+			"name": "Login (stores jwtToken)",
+			"url": "http://localhost:3000/api/auth/login",
+			"time": 53,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Login (stores jwtToken) returns expected status": true,
+				"Login (stores jwtToken) responds within 3 seconds": true,
+				"Login (stores jwtToken) has JSON response": true,
+				"Login (stores jwtToken) returns access token": true
+			},
+			"testPassFailCounts": {
+				"Login (stores jwtToken) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login (stores jwtToken) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login (stores jwtToken) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login (stores jwtToken) returns access token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				53
+			],
+			"allTests": [
+				{
+					"Login (stores jwtToken) returns expected status": true,
+					"Login (stores jwtToken) responds within 3 seconds": true,
+					"Login (stores jwtToken) has JSON response": true,
+					"Login (stores jwtToken) returns access token": true
+				}
+			]
+		},
+		{
+			"id": "e6162f05-87f9-46f2-a8c2-afc2380fec24",
+			"name": "Register User",
+			"url": "http://localhost:3000/api/auth/register",
+			"time": 56,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Register User returns expected status": true,
+				"Register User responds within 3 seconds": true,
+				"Register User has JSON response": true,
+				"Register User returns access token": true
+			},
+			"testPassFailCounts": {
+				"Register User returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Register User responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Register User has JSON response": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Register User returns access token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				56
+			],
+			"allTests": [
+				{
+					"Register User returns expected status": true,
+					"Register User responds within 3 seconds": true,
+					"Register User has JSON response": true,
+					"Register User returns access token": true
+				}
+			]
+		},
+		{
+			"id": "cafceac8-c411-4396-b152-0b5a863a33d5",
+			"name": "Get Profile",
+			"url": "http://localhost:3000/api/auth/profile",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Profile returns expected status": true,
+				"Get Profile responds within 3 seconds": true,
+				"Get Profile has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Profile returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Profile responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Profile has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Get Profile returns expected status": true,
+					"Get Profile responds within 3 seconds": true,
+					"Get Profile has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "0f7eb95c-03b6-4d41-9f81-9a6d5cfa0866",
+			"name": "Get All Sites",
+			"url": "http://localhost:3000/api/sites",
+			"time": 12,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get All Sites returns expected status": true,
+				"Get All Sites responds within 3 seconds": true,
+				"Get All Sites has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get All Sites returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get All Sites responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get All Sites has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Get All Sites returns expected status": true,
+					"Get All Sites responds within 3 seconds": true,
+					"Get All Sites has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "5a86bcab-5427-4693-bd85-406061c41e12",
+			"name": "Get Dashboard Data",
+			"url": "http://localhost:3000/api/sites/dashboard",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Dashboard Data returns expected status": true,
+				"Get Dashboard Data responds within 3 seconds": true,
+				"Get Dashboard Data has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Dashboard Data returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Dashboard Data responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Dashboard Data has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"Get Dashboard Data returns expected status": true,
+					"Get Dashboard Data responds within 3 seconds": true,
+					"Get Dashboard Data has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "a60df8f3-40de-413f-b581-c5bdb100ad8b",
+			"name": "Get Site By ID",
+			"url": "http://localhost:3000/api/sites/21",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Site By ID returns expected status": true,
+				"Get Site By ID responds within 3 seconds": true,
+				"Get Site By ID has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Site By ID returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Site By ID responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Site By ID has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Get Site By ID returns expected status": true,
+					"Get Site By ID responds within 3 seconds": true,
+					"Get Site By ID has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "b60b2620-77f8-4dba-8a8b-97413ef988e2",
+			"name": "Create Site (ADMIN)",
+			"url": "http://localhost:3000/api/sites",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create Site (ADMIN) returns expected status": true,
+				"Create Site (ADMIN) responds within 3 seconds": true,
+				"Create Site (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Create Site (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Site (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Site (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Create Site (ADMIN) returns expected status": true,
+					"Create Site (ADMIN) responds within 3 seconds": true,
+					"Create Site (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "b8e8afce-af00-4cea-9f3f-4c910abe6753",
+			"name": "Update Site (ADMIN)",
+			"url": "http://localhost:3000/api/sites/41",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Update Site (ADMIN) returns expected status": true,
+				"Update Site (ADMIN) responds within 3 seconds": true,
+				"Update Site (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Update Site (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update Site (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update Site (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Update Site (ADMIN) returns expected status": true,
+					"Update Site (ADMIN) responds within 3 seconds": true,
+					"Update Site (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "f74fab64-2efb-46c0-b23e-06ecc9f175d5",
+			"name": "Delete Site (ADMIN)",
+			"url": "http://localhost:3000/api/sites/41",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Delete Site (ADMIN) returns expected status": true,
+				"Delete Site (ADMIN) responds within 3 seconds": true,
+				"Delete Site (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Delete Site (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete Site (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete Site (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Delete Site (ADMIN) returns expected status": true,
+					"Delete Site (ADMIN) responds within 3 seconds": true,
+					"Delete Site (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "5e663353-adf7-4576-b26c-56fae1abf8ce",
+			"name": "Get All Devices (ADMIN)",
+			"url": "http://localhost:3000/api/devices",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get All Devices (ADMIN) returns expected status": true,
+				"Get All Devices (ADMIN) responds within 3 seconds": true,
+				"Get All Devices (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get All Devices (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get All Devices (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get All Devices (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Get All Devices (ADMIN) returns expected status": true,
+					"Get All Devices (ADMIN) responds within 3 seconds": true,
+					"Get All Devices (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "57d79ddd-10d4-4c37-9761-79106734d671",
+			"name": "Get Device By ID (ADMIN)",
+			"url": "http://localhost:3000/api/devices/41",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Device By ID (ADMIN) returns expected status": true,
+				"Get Device By ID (ADMIN) responds within 3 seconds": true,
+				"Get Device By ID (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Device By ID (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Device By ID (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Device By ID (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Get Device By ID (ADMIN) returns expected status": true,
+					"Get Device By ID (ADMIN) responds within 3 seconds": true,
+					"Get Device By ID (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "9417b552-5ad5-46ce-ba1f-5f2d7c6f7f58",
+			"name": "Create Device (ADMIN)",
+			"url": "http://localhost:3000/api/devices",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create Device (ADMIN) returns expected status": true,
+				"Create Device (ADMIN) responds within 3 seconds": true,
+				"Create Device (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Create Device (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Device (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Device (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Create Device (ADMIN) returns expected status": true,
+					"Create Device (ADMIN) responds within 3 seconds": true,
+					"Create Device (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "34fdf7a1-d1ee-46e2-9fb7-85ed8bde682f",
+			"name": "Update Device (ADMIN)",
+			"url": "http://localhost:3000/api/devices/81",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Update Device (ADMIN) returns expected status": true,
+				"Update Device (ADMIN) responds within 3 seconds": true,
+				"Update Device (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Update Device (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update Device (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update Device (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Update Device (ADMIN) returns expected status": true,
+					"Update Device (ADMIN) responds within 3 seconds": true,
+					"Update Device (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "4adba68c-50ba-480e-8e46-904df8b5eef4",
+			"name": "Delete Device (ADMIN)",
+			"url": "http://localhost:3000/api/devices/81",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Delete Device (ADMIN) returns expected status": true,
+				"Delete Device (ADMIN) responds within 3 seconds": true,
+				"Delete Device (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Delete Device (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete Device (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete Device (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Delete Device (ADMIN) returns expected status": true,
+					"Delete Device (ADMIN) responds within 3 seconds": true,
+					"Delete Device (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "08ddcf56-0494-4ca6-9120-b2e1c42d8eb1",
+			"name": "Get Recent Measurements (JWT)",
+			"url": "http://localhost:3000/api/measurements",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Recent Measurements (JWT) returns expected status": true,
+				"Get Recent Measurements (JWT) responds within 3 seconds": true,
+				"Get Recent Measurements (JWT) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Recent Measurements (JWT) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Recent Measurements (JWT) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Recent Measurements (JWT) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Get Recent Measurements (JWT) returns expected status": true,
+					"Get Recent Measurements (JWT) responds within 3 seconds": true,
+					"Get Recent Measurements (JWT) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "0d8ffc9e-8e56-4686-8285-b4e1de4ca077",
+			"name": "Get Measurements By Device (JWT)",
+			"url": "http://localhost:3000/api/measurements?deviceId=41",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Measurements By Device (JWT) returns expected status": true,
+				"Get Measurements By Device (JWT) responds within 3 seconds": true,
+				"Get Measurements By Device (JWT) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Measurements By Device (JWT) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Measurements By Device (JWT) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Measurements By Device (JWT) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Get Measurements By Device (JWT) returns expected status": true,
+					"Get Measurements By Device (JWT) responds within 3 seconds": true,
+					"Get Measurements By Device (JWT) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "567656f3-24c6-4ba8-85bd-cf3d57df5938",
+			"name": "Submit Encrypted Device Measurement",
+			"url": "http://localhost:3000/api/measurements/device?data=replace-with-base64url-encrypted-payload",
+			"time": 3,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Submit Encrypted Device Measurement returns expected status": true,
+				"Submit Encrypted Device Measurement responds within 3 seconds": true,
+				"Submit Encrypted Device Measurement has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Submit Encrypted Device Measurement returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Submit Encrypted Device Measurement responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Submit Encrypted Device Measurement has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				3
+			],
+			"allTests": [
+				{
+					"Submit Encrypted Device Measurement returns expected status": true,
+					"Submit Encrypted Device Measurement responds within 3 seconds": true,
+					"Submit Encrypted Device Measurement has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "9dc8ad10-1ffa-4498-be84-39e51dfbb8cf",
+			"name": "Create Measurement (JWT)",
+			"url": "http://localhost:3000/api/measurements",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Create Measurement (JWT) returns expected status": true,
+				"Create Measurement (JWT) responds within 3 seconds": true,
+				"Create Measurement (JWT) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Create Measurement (JWT) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Measurement (JWT) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Create Measurement (JWT) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Create Measurement (JWT) returns expected status": true,
+					"Create Measurement (JWT) responds within 3 seconds": true,
+					"Create Measurement (JWT) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "9db3fe9d-0d09-43a3-ad71-ab154105db9a",
+			"name": "Export Measurements CSV (JWT)",
+			"url": "http://localhost:3000/api/measurements/export?siteId=21&deviceId=41&limit=100&from=2026-01-01T00:00:00.000Z&to=2026-12-31T23:59:59.999Z",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Export Measurements CSV (JWT) returns expected status": true,
+				"Export Measurements CSV (JWT) responds within 3 seconds": true,
+				"CSV export response content-type is text/csv": true,
+				"CSV export has header row": true
+			},
+			"testPassFailCounts": {
+				"Export Measurements CSV (JWT) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Export Measurements CSV (JWT) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"CSV export response content-type is text/csv": {
+					"pass": 1,
+					"fail": 0
+				},
+				"CSV export has header row": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Export Measurements CSV (JWT) returns expected status": true,
+					"Export Measurements CSV (JWT) responds within 3 seconds": true,
+					"CSV export response content-type is text/csv": true,
+					"CSV export has header row": true
+				}
+			]
+		},
+		{
+			"id": "7fea15ef-5bc5-402a-b0ca-5bd3beda30b7",
+			"name": "Get Evaluations By Site",
+			"url": "http://localhost:3000/api/evaluations/site/21",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Evaluations By Site returns expected status": true,
+				"Get Evaluations By Site responds within 3 seconds": true,
+				"Get Evaluations By Site has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Evaluations By Site returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Evaluations By Site responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Evaluations By Site has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Get Evaluations By Site returns expected status": true,
+					"Get Evaluations By Site responds within 3 seconds": true,
+					"Get Evaluations By Site has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "b1ed7edf-2f43-4f99-a9e7-c94752d2c8d5",
+			"name": "Generate Evaluation",
+			"url": "http://localhost:3000/api/evaluations/generate/21",
+			"time": 6,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Generate Evaluation returns expected status": true,
+				"Generate Evaluation responds within 3 seconds": true,
+				"Generate Evaluation has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Generate Evaluation returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Generate Evaluation responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Generate Evaluation has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Generate Evaluation returns expected status": true,
+					"Generate Evaluation responds within 3 seconds": true,
+					"Generate Evaluation has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "f63f3dfb-12af-4144-affa-bf949c5429c7",
+			"name": "Get Stats (ADMIN)",
+			"url": "http://localhost:3000/admin/stats",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Stats (ADMIN) returns expected status": true,
+				"Get Stats (ADMIN) responds within 3 seconds": true,
+				"Get Stats (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Stats (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Stats (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Stats (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Get Stats (ADMIN) returns expected status": true,
+					"Get Stats (ADMIN) responds within 3 seconds": true,
+					"Get Stats (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "e75d3276-faec-41b7-bf97-9452acef5ccd",
+			"name": "Get Users (ADMIN)",
+			"url": "http://localhost:3000/admin/users",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Users (ADMIN) returns expected status": true,
+				"Get Users (ADMIN) responds within 3 seconds": true,
+				"Get Users (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Get Users (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Users (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Users (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Get Users (ADMIN) returns expected status": true,
+					"Get Users (ADMIN) responds within 3 seconds": true,
+					"Get Users (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "89d93fa0-e486-4ef2-88f4-5603f02015ae",
+			"name": "Update User Role (ADMIN)",
+			"url": "http://localhost:3000/admin/users/2/role",
+			"time": 7,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Update User Role (ADMIN) returns expected status": true,
+				"Update User Role (ADMIN) responds within 3 seconds": true,
+				"Update User Role (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Update User Role (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update User Role (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Update User Role (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Update User Role (ADMIN) returns expected status": true,
+					"Update User Role (ADMIN) responds within 3 seconds": true,
+					"Update User Role (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "b40755d1-ea08-4355-89e0-9a8a54195c96",
+			"name": "Delete User (ADMIN)",
+			"url": "http://localhost:3000/admin/users/2",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Delete User (ADMIN) returns expected status": true,
+				"Delete User (ADMIN) responds within 3 seconds": true,
+				"Delete User (ADMIN) has JSON response": true
+			},
+			"testPassFailCounts": {
+				"Delete User (ADMIN) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete User (ADMIN) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Delete User (ADMIN) has JSON response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Delete User (ADMIN) returns expected status": true,
+					"Delete User (ADMIN) responds within 3 seconds": true,
+					"Delete User (ADMIN) has JSON response": true
+				}
+			]
+		},
+		{
+			"id": "9324cb8e-911b-4290-b863-a5715af9d672",
+			"name": "Get Device Edit Page (DB-backed view)",
+			"url": "http://localhost:3000/admin/devices/41/edit",
+			"time": 11,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Get Device Edit Page (DB-backed view) returns expected status": true,
+				"Get Device Edit Page (DB-backed view) responds within 3 seconds": true,
+				"Edit page returns HTML": true
+			},
+			"testPassFailCounts": {
+				"Get Device Edit Page (DB-backed view) returns expected status": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Get Device Edit Page (DB-backed view) responds within 3 seconds": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Edit page returns HTML": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"Get Device Edit Page (DB-backed view) returns expected status": true,
+					"Get Device Edit Page (DB-backed view) responds within 3 seconds": true,
+					"Edit page returns HTML": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 266,
+	"collection": {
+		"requests": [
+			{
+				"id": "debb0c11-4896-4652-8058-98ffb5b3fdfa",
+				"method": "POST"
+			},
+			{
+				"id": "e6162f05-87f9-46f2-a8c2-afc2380fec24",
+				"method": "POST"
+			},
+			{
+				"id": "cafceac8-c411-4396-b152-0b5a863a33d5",
+				"method": "GET"
+			},
+			{
+				"id": "0f7eb95c-03b6-4d41-9f81-9a6d5cfa0866",
+				"method": "GET"
+			},
+			{
+				"id": "5a86bcab-5427-4693-bd85-406061c41e12",
+				"method": "GET"
+			},
+			{
+				"id": "a60df8f3-40de-413f-b581-c5bdb100ad8b",
+				"method": "GET"
+			},
+			{
+				"id": "b60b2620-77f8-4dba-8a8b-97413ef988e2",
+				"method": "POST"
+			},
+			{
+				"id": "b8e8afce-af00-4cea-9f3f-4c910abe6753",
+				"method": "PUT"
+			},
+			{
+				"id": "f74fab64-2efb-46c0-b23e-06ecc9f175d5",
+				"method": "DELETE"
+			},
+			{
+				"id": "5e663353-adf7-4576-b26c-56fae1abf8ce",
+				"method": "GET"
+			},
+			{
+				"id": "57d79ddd-10d4-4c37-9761-79106734d671",
+				"method": "GET"
+			},
+			{
+				"id": "9417b552-5ad5-46ce-ba1f-5f2d7c6f7f58",
+				"method": "POST"
+			},
+			{
+				"id": "34fdf7a1-d1ee-46e2-9fb7-85ed8bde682f",
+				"method": "PUT"
+			},
+			{
+				"id": "4adba68c-50ba-480e-8e46-904df8b5eef4",
+				"method": "DELETE"
+			},
+			{
+				"id": "08ddcf56-0494-4ca6-9120-b2e1c42d8eb1",
+				"method": "GET"
+			},
+			{
+				"id": "0d8ffc9e-8e56-4686-8285-b4e1de4ca077",
+				"method": "GET"
+			},
+			{
+				"id": "567656f3-24c6-4ba8-85bd-cf3d57df5938",
+				"method": "GET"
+			},
+			{
+				"id": "9dc8ad10-1ffa-4498-be84-39e51dfbb8cf",
+				"method": "POST"
+			},
+			{
+				"id": "9db3fe9d-0d09-43a3-ad71-ab154105db9a",
+				"method": "GET"
+			},
+			{
+				"id": "7fea15ef-5bc5-402a-b0ca-5bd3beda30b7",
+				"method": "GET"
+			},
+			{
+				"id": "b1ed7edf-2f43-4f99-a9e7-c94752d2c8d5",
+				"method": "POST"
+			},
+			{
+				"id": "f63f3dfb-12af-4144-affa-bf949c5429c7",
+				"method": "GET"
+			},
+			{
+				"id": "e75d3276-faec-41b7-bf97-9452acef5ccd",
+				"method": "GET"
+			},
+			{
+				"id": "89d93fa0-e486-4ef2-88f4-5603f02015ae",
+				"method": "PATCH"
+			},
+			{
+				"id": "b40755d1-ea08-4355-89e0-9a8a54195c96",
+				"method": "DELETE"
+			},
+			{
+				"id": "9324cb8e-911b-4290-b863-a5715af9d672",
+				"method": "GET"
+			}
+		]
+	}
+}
