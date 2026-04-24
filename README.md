@@ -1,98 +1,178 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Vizsgaremek backend — air quality monitoring API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend for the **Komplex Levegőminőség Elemző Rendszer** air pollution monitoring system: monitoring **sites** (locations), **devices** attached to sites, **measurements** (PM and weather-related fields), and optional **site evaluations**. It exposes a JSON REST API.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Most HTTP routes live under the **`/api`** prefix. **`/admin`** routes and the **root page** are excluded from that prefix on purpose (see `main.ts`).
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## What it is built with and why
 
-## Project setup
+| Piece | Role |
+|--------|------|
+| **NestJS** | Structured Node server: modules, dependency injection, guards, and clear separation of controllers and services. Fits a growing API without turning into a single giant script. |
+| **Prisma** | Type-safe access to MySQL, migrations-friendly schema in one place (`prisma/schema.prisma`), and straightforward relations (site → devices → measurements). |
+| **MySQL** | Relational data with foreign keys (for example cascade deletes from site to devices and measurements), which matches the domain well. |
+| **Passport + JWT** | Stateless auth for APIs: clients send `Authorization: Bearer <token>` after login. The JWT payload carries identity and role; each protected request re-loads the user from the database so revoked users are not trusted forever from an old token alone. |
+| **bcrypt** | Password hashing before storage. |
+| **class-validator / ValidationPipe** | Request validation at the edge of the app. |
+| **Swagger** (`@nestjs/swagger`) | Interactive API docs at **`/api/docs`** — useful while developing and when handing the API to a frontend team. |
+| **EJS** | Server-rendered HTML for simple pages (home and admin device edit) without pulling in a full frontend framework on the server. |
+| **Vercel (`api/index.ts` + `vercel.json`)** | Serverless-style hosting: one entry builds the Nest app once and forwards each request to the Express adapter. CORS is opened more broadly there than in local `main.ts` because deployment URLs vary. |
 
-```bash
-$ npm install
-```
+Device ingestion uses **Node’s `crypto`** module (AES-256-CBC with a key derived from a shared secret) so field devices can send a **base64url** blob in a query string instead of holding user passwords or JWTs.
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Prerequisites
 
-# watch mode
-$ npm run start:dev
+- Node.js (version compatible with the Nest 11 / Prisma 6 stack in `package.json`)
+- MySQL and a `DATABASE_URL` Prisma can use
+- Optional but recommended: **Postman** or similar to import `postman-db-endpoints.postman_collection.json`
 
-# production mode
-$ npm run start:prod
-```
+---
 
-## Run tests
+## Environment variables
 
-```bash
-# unit tests
-$ npm run test
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | MySQL connection string for Prisma. |
+| `JWT_SECRET` | Signing key for access tokens. Defaults to a development-only value in code if unset — **set a strong secret in production**. |
+| `DEVICE_INGEST_SHARED_KEY` | Shared secret for **`GET /api/measurements/device`**. If missing, that endpoint responds with **401** so misconfigured servers do not silently accept garbage. |
+| `PORT` | Listen port locally (defaults to **3000** in `main.ts`). On Vercel the platform sets this. |
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Setup and scripts
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
+npx prisma migrate deploy   # or migrate dev during development
+npx prisma db seed            # optional: sample sites, users, devices (see prisma/seed.ts)
+npm run start:dev             # hot reload
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Other useful commands: `npm run build`, `npm run start:prod`, `npm test`, `npm run test:e2e`.
 
-## Resources
+After seeding, you typically have:
 
-Check out a few resources that may come in handy when working with NestJS:
+- **Admin:** `admin@example.com` / `admin123`
+- **Normal user:** `user@example.com` / `user123`
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## Running and documenting the API
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Base URL (local):** `http://localhost:3000`
+- **Swagger UI:** `http://localhost:3000/api/docs`
+- **Postman:** import `postman-db-endpoints.postman_collection.json` — it sets `baseUrl`, runs a few collection scripts for tokens and IDs, and asserts basic status codes.
 
-## Stay in touch
+Authenticated calls use:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```http
+Authorization: Bearer <access_token>
+```
 
-## License
+Tokens are returned by **`POST /api/auth/login`** and **`POST /api/auth/register`** as JSON: `{ "access_token": "..." }`.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## URL layout
+
+- **`GET /`** — Renders the home view (`views/index` via EJS). Not under `/api`.
+- **`/api/...`** — Main JSON API (global prefix **`api`**).
+- **`/admin/...`** — Admin HTML and JSON without the `api` segment (see below).
+- **`/api/docs`** — Swagger.
+
+CORS for local development allows specific origins (including a Vite dev server on port 5173); adjust `main.ts` if your frontend origin differs.
+
+---
+
+## Endpoints — behaviour and expectations
+
+### Authentication (`/api/auth`)
+
+| Method | Path | Auth | What it does |
+|--------|------|------|----------------|
+| POST | `/api/auth/login` | No | Body: `identifier` (email or username) and `password`. Legacy field `email` is accepted as an alias for `identifier`. Returns **`access_token`** or **401** if credentials are wrong. |
+| POST | `/api/auth/register` | No | Body: `username`, `email`, `password`, optional `role`. Creates a user, hashes the password, returns **`access_token`**. If `role` is omitted, the service defaults the role in code — when exposing registration publicly you usually want to **force** `USER` in your client or tighten the backend. |
+| GET | `/api/auth/profile` | JWT | Returns the current user object **without** the password hash. |
+
+### Sites (`/api/sites`)
+
+| Method | Path | Auth | What it does |
+|--------|------|------|----------------|
+| GET | `/api/sites` | Optional JWT | Lists all sites. If the caller is an **ADMIN** (valid Bearer token with that role), the response includes **devices** for each site; otherwise sites are returned without embedding devices. |
+| GET | `/api/sites/dashboard` | No | Aggregated dashboard payload: per-site devices, last measurement summary, and map-oriented defaults. Intended for a public or semi-public dashboard view. |
+| GET | `/api/sites/:id` | Optional JWT | One site by ID. Same **admin sees devices** rule as the list route; evaluations are included when loading a single site. |
+| POST | `/api/sites` | JWT + **ADMIN** | Creates a site (`name`, optional `lat`, `lon`). |
+| PUT | `/api/sites/:id` | JWT + **ADMIN** | Updates a site. |
+| DELETE | `/api/sites/:id` | JWT + **ADMIN** | Deletes the site; related devices and measurements go away with cascade rules in the database. |
+
+### Devices (`/api/devices`)
+
+All routes below require **JWT** and role **ADMIN**.
+
+| Method | Path | What it does |
+|--------|------|----------------|
+| GET | `/api/devices` | Lists devices. |
+| GET | `/api/devices/:id` | One device. |
+| POST | `/api/devices` | Creates a device (for example `site_id`, `name`, `status`, `computer_type`, `measure_interval`, `wifi_ssid`, … — see Swagger / Postman). |
+| PUT | `/api/devices/:id` | Updates allowed fields. |
+| DELETE | `/api/devices/:id` | Deletes the device and its measurements (cascade). |
+
+### Measurements (`/api/measurements`)
+
+| Method | Path | Auth | What it does |
+|--------|------|------|----------------|
+| GET | `/api/measurements` | JWT | Without `deviceId`: recent measurements (limited batch, newest first). With **`?deviceId=`**: recent measurements for that device (smaller cap in service code). |
+| GET | `/api/measurements/device?data=<base64url>` | **No JWT** | **Device ingest:** `data` must decode to **16-byte IV + ciphertext**. The server decrypts with **AES-256-CBC** using a key derived as **SHA-256** of `DEVICE_INGEST_SHARED_KEY`, parses JSON, validates numeric fields, stores a row, and updates **`last_seen`** on the device. Wrong encoding, bad JSON, unknown `device_id`, or decrypt failure → **400** / **401** as appropriate. |
+| POST | `/api/measurements` | JWT | Creates a measurement from JSON (for example `device_id`, PM fields, `temp`, `humidity`, wind, `rain`, optional `composition`, `wind_dir`). |
+| GET | `/api/measurements/export` | JWT | CSV download. Query params are optional filters: **`siteId`**, **`deviceId`**, **`limit`**, **`from`**, **`to`** (ISO datetimes). Response headers mark **CSV** attachment; first line is the header row. |
+
+### Evaluations (`/api/evaluations`)
+
+| Method | Path | Auth | What it does |
+|--------|------|------|----------------|
+| GET | `/api/evaluations/site/:siteId` | No | Lists evaluations stored for that site. |
+| POST | `/api/evaluations/generate/:siteId` | No | Body: `evaluation_text`, optional `generated_by` (user id). Persists a new evaluation row for the site. |
+
+These routes are intentionally open in the current code; if only staff should generate evaluations, add JWT + role guards the same way as on admin routes.
+
+### Admin (`/admin` — no `/api` prefix)
+
+| Method | Path | Auth | What it does |
+|--------|------|------|----------------|
+| GET | `/admin/devices/:id/edit` | No (currently) | **HTML** page rendering `views/device-edit` with the device loaded from the database. Treat as an internal tool unless you protect it. |
+| GET | `/admin/stats` | JWT + **ADMIN** | Counts users and devices (including how many devices are **active**). |
+| GET | `/admin/users` | JWT + **ADMIN** | Lists users **without** passwords. |
+| PATCH | `/admin/users/:id/role` | JWT + **ADMIN** | Body: `{ "role": "..." }` — updates role. |
+| DELETE | `/admin/users/:id` | JWT + **ADMIN** | Deletes the user. |
+
+---
+
+## Data model (short)
+
+- **User** — credentials and `role` (`ADMIN`, `USER`, … as plain strings).
+- **Site** — name and optional coordinates; has many devices and evaluations.
+- **Device** — belongs to a site; status, interval, optional WiFi and debug fields; has many measurements.
+- **Measurement** — PM1 / PM2.5 / PM4 / PM10, environment fields, optional composition text; tied to a device.
+- **SiteEvaluation** — text and timestamp for a site, optional `generated_by` user id.
+
+Exact columns and types: `prisma/schema.prisma`.
+
+---
+
+## Testing the API
+
+1. Start the app and ensure MySQL is reachable.
+2. Open **`/api/docs`** for try-it-out calls, **or** import the Postman collection.
+3. Log in as admin, copy `access_token`, set **`Authorization: Bearer …`** on protected requests.
+
+The Postman collection folder **“Admin (No /api Prefix)”** reminds you that those URLs are **`/admin/...`**, not **`/api/admin/...`**.
+
+---
+
+## Licence
+
+See `package.json` (`UNLICENSED` by default for this project template).
