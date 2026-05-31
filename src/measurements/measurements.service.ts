@@ -45,6 +45,37 @@ export class MeasurementsService {
     return this.prisma.measurement.create({ data });
   }
 
+  async createFromDevicePost(body: {
+    timestamp?: number;
+    pm1_0?: number;
+    pm2_5?: number;
+    pm4_0?: number;
+    pm10_0?: number;
+    temperature?: number;
+    humidity?: number;
+    voc_index?: number;
+    nox_index?: number;
+  }) {
+    const deviceId = this.configService.get<string>('DEVICE_ID');
+    const timestamp = body.timestamp ? new Date(body.timestamp * 1000) : new Date();
+
+    return this.prisma.measurement.create({
+      data: {
+        device_id: deviceId ? Number(deviceId) : 1,
+        timestamp,
+        pm1: body.pm1_0 ?? 0,
+        pm2_5: body.pm2_5 ?? 0,
+        pm4: body.pm4_0 ?? 0,
+        pm10: body.pm10_0 ?? 0,
+        temp: body.temperature ?? 0,
+        humidity: body.humidity ?? 0,
+        wind_speed: 0,
+        dewpoint: 0,
+        rain: 0,
+      },
+    });
+  }
+
   async createFromEncryptedQueryParam(data: string) {
     if (!data) {
       throw new BadRequestException('Missing data query parameter');

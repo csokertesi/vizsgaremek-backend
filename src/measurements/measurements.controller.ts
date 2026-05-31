@@ -20,15 +20,10 @@ export class MeasurementsController {
     return this.measurementsService.findAll();
   }
 
-  @ApiOperation({ summary: 'Submit encrypted device measurement via GET' })
-  @ApiQuery({
-    name: 'data',
-    required: true,
-    description: 'Base64url encoded encrypted payload containing IV + ciphertext',
-  })
-  @Get('device')
-  createFromDevice(@Query('data') data: string) {
-    return this.measurementsService.createFromEncryptedQueryParam(data);
+  @ApiOperation({ summary: 'Submit device measurement as plain JSON POST' })
+  @Post('device')
+  createFromDevicePost(@Body() body: any) {
+    return this.measurementsService.createFromDevicePost(body);
   }
 
   @ApiOperation({ summary: 'Submit a new measurement' })
