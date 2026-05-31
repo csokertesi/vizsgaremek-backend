@@ -46,6 +46,7 @@ export class MeasurementsService {
   }
 
   async createFromDevicePost(body: {
+    device_id?: number;
     timestamp?: number;
     pm1_0?: number;
     pm2_5?: number;
@@ -56,12 +57,11 @@ export class MeasurementsService {
     voc_index?: number;
     nox_index?: number;
   }) {
-    const deviceId = this.configService.get<string>('DEVICE_ID');
     const timestamp = body.timestamp ? new Date(body.timestamp * 1000) : new Date();
 
     return this.prisma.measurement.create({
       data: {
-        device_id: deviceId ? Number(deviceId) : 1,
+        device_id: body.device_id ?? 82,
         timestamp,
         pm1: body.pm1_0 ?? 0,
         pm2_5: body.pm2_5 ?? 0,
